@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treinamento Pré-EG | Estante Mágica</title>
+<style>
+:root{
+  --roxo:#6B4EFF;
+  --roxo-claro:#EFEAFF;
+  --roxo-escuro:#4A33B8;
+  --amarelo:#FFD54A;
+  --rosa:#FF6B9D;
+  --verde:#22C55E;
+  --vermelho:#EF4444;
+  --laranja:#F59E0B;
+  --cinza-100:#F5F5F7;
+  --cinza-200:#E5E5EA;
+  --cinza-400:#9CA3AF;
+  --cinza-700:#374151;
+  --cinza-900:#111827;
+  --branco:#FFFFFF;
+  --sombra:0 4px 24px rgba(107,78,255,0.08);
+  --sombra-hover:0 8px 32px rgba(107,78,255,0.16);
+  --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:var(--cinza-100);
+  color:var(--cinza-900);
+  line-height:1.6;
+  min-height:100vh;
+}
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{
+  background:var(--branco);
+  border-right:1px solid var(--cinza-200);
+  padding:24px 16px;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.logo{display:flex;align-items:center;gap:10px;padding:0 8px 24px;border-bottom:1px solid var(--cinza-200);margin-bottom:16px}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--roxo),var(--rosa));display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+.logo h2{font-size:15px;color:var(--cinza-900)}
+.logo p{font-size:11px;color:var(--cinza-400);text-transform:uppercase;letter-spacing:0.5px}
+.nav-section{margin-bottom:24px}
+.nav-title{font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:var(--cinza-400);padding:0 12px;margin-bottom:8px;font-weight:600}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 12px;border-radius:10px;
+  color:var(--cinza-700);text-decoration:none;font-size:14px;
+  cursor:pointer;transition:all .2s;
+  margin-bottom:2px;
+}
+.nav-item:hover{background:var(--roxo-claro);color:var(--roxo)}
+.nav-item.active{background:var(--roxo);color:white}
+.nav-item .num{
+  width:22px;height:22px;border-radius:6px;
+  background:var(--cinza-100);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;
+}
+.nav-item.active .num{background:rgba(255,255,255,0.25)}
+.progress-mini{padding:12px;background:var(--roxo-claro);border-radius:12px;margin-top:16px}
+.progress-mini-label{font-size:12px;color:var(--roxo-escuro);font-weight:600;margin-bottom:6px}
+.progress-bar{height:6px;background:white;border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--roxo),var(--rosa));width:0;transition:width .4s}
+.progress-text{font-size:11px;color:var(--roxo-escuro);margin-top:4px}
+
+/* MAIN */
+.main{padding:40px 56px;max-width:1100px}
+.module{display:none;animation:fadeIn .3s}
+.module.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.module-header{margin-bottom:32px}
+.module-tag{
+  display:inline-block;padding:4px 10px;
+  background:var(--roxo-claro);color:var(--roxo);
+  font-size:11px;font-weight:600;text-transform:uppercase;
+  letter-spacing:0.5px;border-radius:99px;margin-bottom:12px;
+}
+.module h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px}
+.module-subtitle{font-size:16px;color:var(--cinza-400)}
+
+.card{
+  background:var(--branco);
+  border-radius:var(--radius);
+  padding:28px;
+  box-shadow:var(--sombra);
+  margin-bottom:20px;
+}
+.card h2{font-size:20px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.card h3{font-size:16px;margin:16px 0 8px;color:var(--cinza-700)}
+.card p{color:var(--cinza-700);margin-bottom:12px}
+.card .icon{font-size:24px}
+
+.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}
+.info-box{
+  padding:20px;border-radius:12px;
+  background:var(--cinza-100);
+  border-left:4px solid var(--roxo);
+}
+.info-box h4{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--cinza-400);margin-bottom:6px}
+.info-box p{margin:0;color:var(--cinza-900);font-weight:500}
+
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600}
+.pill-verde{background:#DCFCE7;color:#166534}
+.pill-amarelo{background:#FEF3C7;color:#92400E}
+.pill-vermelho{background:#FEE2E2;color:#991B1B}
+.pill-roxo{background:var(--roxo-claro);color:var(--roxo-escuro)}
+
+/* CHECKLIST */
+.check-block{margin-bottom:24px}
+.check-block-title{font-weight:600;font-size:15px;margin-bottom:10px;color:var(--cinza-900);display:flex;align-items:center;gap:8px}
+.check-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 14px;border-radius:10px;
+  margin-bottom:6px;cursor:pointer;
+  transition:background .15s;
+}
+.check-item:hover{background:var(--cinza-100)}
+.check-item input[type=checkbox]{
+  appearance:none;-webkit-appearance:none;
+  width:20px;height:20px;border:2px solid var(--cinza-200);
+  border-radius:6px;cursor:pointer;flex-shrink:0;
+  position:relative;margin-top:1px;transition:all .15s;
+}
+.check-item input[type=checkbox]:checked{background:var(--roxo);border-color:var(--roxo)}
+.check-item input[type=checkbox]:checked::after{
+  content:"✓";color:white;font-size:13px;font-weight:700;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+}
+.check-item input[type=checkbox]:checked ~ .check-label{text-decoration:line-through;color:var(--cinza-400)}
+.check-label{font-size:14px;color:var(--cinza-700);flex:1}
+
+/* TIMELINE / CADENCIA */
+.timeline{display:flex;flex-direction:column;gap:0;margin:24px 0}
+.timeline-day{
+  display:grid;grid-template-columns:120px 1fr;gap:24px;
+  padding:20px 0;border-bottom:1px solid var(--cinza-200);
+  position:relative;
+}
+.timeline-day:last-child{border-bottom:none}
+.timeline-marker{display:flex;flex-direction:column;align-items:center;gap:8px}
+.day-badge{
+  width:80px;padding:12px 0;border-radius:12px;
+  background:var(--roxo);color:white;
+  text-align:center;font-weight:700;
+}
+.day-badge.urgent{background:linear-gradient(135deg,var(--vermelho),var(--rosa))}
+.day-badge.warning{background:linear-gradient(135deg,var(--laranja),var(--amarelo));color:var(--cinza-900)}
+.day-badge.go{background:linear-gradient(135deg,var(--verde),#10B981)}
+.day-badge .big{font-size:24px;line-height:1;display:block}
+.day-badge .small{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.9}
+.day-content h4{font-size:16px;margin-bottom:8px}
+.day-actions{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.action-line{
+  display:flex;align-items:flex-start;gap:8px;
+  font-size:13px;color:var(--cinza-700);
+}
+.action-line::before{content:"→";color:var(--roxo);font-weight:700}
+.day-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;background:var(--roxo-claro);color:var(--roxo-escuro);margin-left:8px;font-weight:600}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:var(--cinza-100);padding:4px;border-radius:12px;margin-bottom:20px;flex-wrap:wrap}
+.tab{
+  padding:10px 16px;border-radius:8px;cursor:pointer;
+  font-size:13px;font-weight:600;color:var(--cinza-400);
+  transition:all .15s;border:none;background:transparent;flex:1;text-align:center;min-width:120px;
+}
+.tab:hover{color:var(--roxo)}
+.tab.active{background:white;color:var(--roxo);box-shadow:0 2px 6px rgba(0,0,0,0.04)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* DISCURSO BOX */
+.speech-box{
+  background:linear-gradient(135deg,#FAFAFF,#F5F0FF);
+  border:1px solid var(--roxo-claro);
+  border-radius:12px;padding:20px;margin:12px 0;
+  position:relative;
+}
+.speech-box::before{
+  content:"💬";position:absolute;top:-12px;left:20px;
+  background:white;padding:4px 8px;border-radius:99px;
+  font-size:16px;border:1px solid var(--roxo-claro);
+}
+.speech-box p{margin-bottom:10px;color:var(--cinza-900);line-height:1.7}
+.speech-box em{background:var(--amarelo);padding:1px 5px;border-radius:4px;font-style:normal;font-weight:600}
+
+.alert{
+  display:flex;gap:12px;padding:14px 16px;border-radius:10px;
+  font-size:13px;margin:12px 0;align-items:flex-start;
+}
+.alert-warning{background:#FFFBEB;border-left:4px solid var(--amarelo);color:#92400E}
+.alert-info{background:#EFF6FF;border-left:4px solid #3B82F6;color:#1E40AF}
+.alert-danger{background:#FEF2F2;border-left:4px solid var(--vermelho);color:#991B1B}
+.alert-success{background:#F0FDF4;border-left:4px solid var(--verde);color:#166534}
+.alert .icon{font-size:18px;flex-shrink:0}
+
+/* TEMPLATES (WhatsApp / Email) */
+.template-card{
+  background:var(--branco);border:1px solid var(--cinza-200);
+  border-radius:12px;padding:20px;margin-bottom:16px;
+  transition:box-shadow .2s;
+}
+.template-card:hover{box-shadow:var(--sombra)}
+.template-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.template-name{font-weight:700;font-size:14px}
+.template-code{font-family:"SF Mono",Monaco,monospace;font-size:11px;color:var(--cinza-400);background:var(--cinza-100);padding:2px 8px;border-radius:6px;display:inline-block;margin-top:4px}
+.template-body{
+  background:#F5F5F7;border-radius:10px;padding:14px;
+  font-size:13px;color:var(--cinza-900);white-space:pre-wrap;
+  font-family:-apple-system,sans-serif;line-height:1.6;
+  max-height:200px;overflow-y:auto;
+  border-left:3px solid #25D366;
+}
+.template-body.email{border-left-color:#3B82F6}
+.template-actions{display:flex;gap:8px;margin-top:12px}
+.btn{
+  padding:8px 14px;border-radius:8px;border:none;
+  font-size:12px;font-weight:600;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
+  transition:all .15s;
+}
+.btn-primary{background:var(--roxo);color:white}
+.btn-primary:hover{background:var(--roxo-escuro)}
+.btn-ghost{background:var(--cinza-100);color:var(--cinza-700)}
+.btn-ghost:hover{background:var(--cinza-200)}
+.btn.copied{background:var(--verde);color:white}
+
+/* QUIZ */
+.quiz-q{margin-bottom:20px;padding:20px;background:var(--cinza-100);border-radius:12px}
+.quiz-q-title{font-weight:600;margin-bottom:12px;font-size:15px}
+.quiz-q-num{display:inline-block;background:var(--roxo);color:white;padding:2px 8px;border-radius:6px;font-size:12px;margin-right:8px}
+.quiz-opt{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;background:white;
+  border:2px solid transparent;border-radius:10px;
+  cursor:pointer;margin-bottom:6px;
+  transition:all .15s;font-size:14px;
+}
+.quiz-opt:hover{border-color:var(--roxo-claro)}
+.quiz-opt.selected{border-color:var(--roxo);background:var(--roxo-claro)}
+.quiz-opt.correct{border-color:var(--verde);background:#F0FDF4}
+.quiz-opt.wrong{border-color:var(--vermelho);background:#FEF2F2}
+.quiz-feedback{padding:12px;border-radius:10px;font-size:13px;margin-top:10px;display:none}
+.quiz-feedback.show{display:block}
+.quiz-feedback.correct{background:#F0FDF4;color:#166534}
+.quiz-feedback.wrong{background:#FEF2F2;color:#991B1B}
+
+/* SCENARIO SIMULATOR */
+.scenario{padding:24px;background:linear-gradient(135deg,#FFF,var(--roxo-claro));border-radius:16px;border:1px solid var(--roxo-claro)}
+.scenario-context{font-size:15px;line-height:1.7;margin-bottom:20px;padding:16px;background:white;border-radius:10px;border-left:4px solid var(--rosa)}
+.scenario-choice{
+  display:block;width:100%;text-align:left;
+  padding:14px 16px;background:white;border:2px solid var(--cinza-200);
+  border-radius:10px;margin-bottom:8px;cursor:pointer;
+  font-size:14px;color:var(--cinza-900);
+  transition:all .15s;
+}
+.scenario-choice:hover{border-color:var(--roxo);transform:translateX(4px)}
+.scenario-result{margin-top:16px;padding:16px;border-radius:10px;display:none}
+.scenario-result.show{display:block;animation:fadeIn .3s}
+
+/* FLASHCARDS */
+.flashcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:16px}
+.flashcard{
+  background:linear-gradient(135deg,var(--roxo),var(--roxo-escuro));
+  color:white;border-radius:14px;padding:20px;
+  min-height:160px;cursor:pointer;
+  display:flex;flex-direction:column;justify-content:space-between;
+  transition:transform .25s,box-shadow .25s;
+  position:relative;overflow:hidden;
+}
+.flashcard:hover{transform:translateY(-4px);box-shadow:var(--sombra-hover)}
+.flashcard.flipped{background:linear-gradient(135deg,var(--rosa),var(--laranja))}
+.flashcard-side{display:block}
+.flashcard.flipped .flashcard-front{display:none}
+.flashcard:not(.flipped) .flashcard-back{display:none}
+.flashcard-front{font-size:16px;font-weight:600;line-height:1.4}
+.flashcard-back{font-size:13px;line-height:1.5}
+.flashcard-tag{font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:0.7;margin-bottom:8px;font-weight:700}
+.flashcard-hint{font-size:11px;opacity:0.7;margin-top:auto}
+
+/* CALL TO COMPLETE */
+.cta-complete{
+  background:linear-gradient(135deg,var(--roxo),var(--rosa));
+  color:white;padding:32px;border-radius:16px;text-align:center;
+  margin-top:24px;
+}
+.cta-complete h3{font-size:22px;margin-bottom:8px}
+.cta-complete p{color:rgba(255,255,255,0.9);margin-bottom:16px}
+.btn-white{background:white;color:var(--roxo);padding:12px 24px;font-size:14px;border:none;border-radius:10px;font-weight:700;cursor:pointer}
+
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:16px 0}
+.stat{background:var(--cinza-100);padding:14px;border-radius:12px}
+.stat-num{font-size:22px;font-weight:700;color:var(--roxo)}
+.stat-label{font-size:12px;color:var(--cinza-400);text-transform:uppercase;letter-spacing:0.5px}
+
+/* FOOTER NAV */
+.module-footer{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  margin-top:40px;padding-top:24px;border-top:1px solid var(--cinza-200);
+}
+.nav-btn{
+  display:flex;align-items:center;gap:14px;padding:16px 20px;
+  background:var(--branco);border:1px solid var(--cinza-200);
+  border-radius:14px;cursor:pointer;text-align:left;
+  transition:all .2s;font-family:inherit;color:var(--cinza-900);
+  min-height:72px;
+}
+.nav-btn:hover:not(:disabled){border-color:var(--roxo);box-shadow:var(--sombra);transform:translateY(-2px)}
+.nav-btn:disabled{opacity:0.4;cursor:not-allowed}
+.nav-btn-arrow{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--roxo-claro);color:var(--roxo);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;flex-shrink:0;
+}
+.nav-btn-next{justify-content:flex-end;text-align:right}
+.nav-btn-next .nav-btn-arrow{background:var(--roxo);color:white;order:2}
+.nav-btn-info{flex:1;display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.nav-btn-label{font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--cinza-400);font-weight:600}
+.nav-btn-title{font-size:14px;font-weight:600;color:var(--cinza-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.module-progress-pill{
+  display:flex;justify-content:center;align-items:center;gap:8px;
+  margin-top:20px;color:var(--cinza-400);font-size:12px;
+}
+.module-progress-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--cinza-200);transition:all .2s}
+.module-progress-pill .dot.active{background:var(--roxo);transform:scale(1.5)}
+.module-progress-pill .dot.done{background:var(--roxo-claro)}
+
+@media (max-width:600px){
+  .module-footer{grid-template-columns:1fr}
+}
+
+/* RESPONSIVE */
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:relative;height:auto;width:100%}
+  .main{padding:24px}
+  .info-grid{grid-template-columns:1fr}
+  .timeline-day{grid-template-columns:1fr;gap:8px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">📚</div>
+      <div>
+        <h2>Treinamento EG</h2>
+        <p>Pré Envio Gráfico</p>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title">Conteúdo</div>
+      <div class="nav-item active" data-target="m-intro"><span class="num">0</span> Boas-vindas</div>
+      <div class="nav-item" data-target="m-objetivo"><span class="num">1</span> Objetivo e visão geral</div>
+      <div class="nav-item" data-target="m-checklist"><span class="num">2</span> Checklist Pré-EG</div>
+      <div class="nav-item" data-target="m-cadencia"><span class="num">3</span> Cadência D-7 ao D0</div>
+      <div class="nav-item" data-target="m-discurso"><span class="num">4</span> Discurso</div>
+      <div class="nav-item" data-target="m-rotina"><span class="num">5</span> Rotina e processos</div>
+      <div class="nav-item" data-target="m-criticos"><span class="num">6</span> Pontos críticos e objeções</div>
+      <div class="nav-item" data-target="m-emails"><span class="num">7</span> Modelos de e-mail</div>
+      <div class="nav-item" data-target="m-templates"><span class="num">8</span> Templates WhatsApp</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title">Fixação</div>
+      <div class="nav-item" data-target="m-flashcards"><span class="num">★</span> Flashcards</div>
+      <div class="nav-item" data-target="m-simulador"><span class="num">★</span> Simulador de cenários</div>
+      <div class="nav-item" data-target="m-quiz"><span class="num">★</span> Quiz final</div>
+    </div>
+
+    <div class="progress-mini">
+      <div class="progress-mini-label">Seu progresso</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+      <div class="progress-text" id="progText">0 de 11 módulos</div>
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+<!-- ===== MÓDULO 0: BOAS-VINDAS ===== -->
+<section class="module active" id="m-intro">
+  <div class="module-header">
+    <span class="module-tag">Boas-vindas</span>
+    <h1>Treinamento Pré Envio Gráfico</h1>
+    <p class="module-subtitle">Tudo o que você precisa para fazer um Pré-EG impecável.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🎯</span> Por que esse treinamento existe</h2>
+    <p>O <strong>Pré Envio Gráfico</strong> é a etapa final antes dos livros entrarem em produção. É o momento em que garantimos que cada obra dos nossos autores mirins chegue perfeita ao Evento de Autógrafos — sem refação, no prazo, com os dados corretos.</p>
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Quando começa</h4>
+        <p>7 dias úteis antes do EG</p>
+      </div>
+      <div class="info-box">
+        <h4>Quando termina</h4>
+        <p>No envio para produção (Rachel)</p>
+      </div>
+      <div class="info-box">
+        <h4>Para quem</h4>
+        <p>Consultores de Sucesso com escolas a 7 dias úteis do EG</p>
+      </div>
+      <div class="info-box">
+        <h4>Objetivo final</h4>
+        <p>Livros corretos, no prazo, sem refação</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🗺️</span> Como navegar</h2>
+    <p>O treinamento está dividido em 8 módulos de conteúdo + 3 ferramentas de fixação. Você pode percorrer em ordem ou pular para o tema que precisa revisar.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num">8</div><div class="stat-label">Módulos</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Ferramentas</div></div>
+      <div class="stat"><div class="stat-num">7</div><div class="stat-label">Dias de cadência</div></div>
+      <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Templates prontos</div></div>
+    </div>
+    <div class="alert alert-info">
+      <span class="icon">💡</span>
+      <div><strong>Dica:</strong> ao concluir cada módulo, ele marca como visto automaticamente. Use os <strong>Flashcards</strong> e o <strong>Simulador</strong> para fixar antes de fechar.</div>
+    </div>
+  </div>
+
+  <div class="cta-complete">
+    <h3>Pronto para começar?</h3>
+    <p>Comece pelo Módulo 1 ou pule para o tema que precisa revisar.</p>
+    <button class="btn-white" onclick="goTo('m-objetivo')">Começar agora →</button>
+  </div>
+</section>
+
+<!-- ===== MÓDULO 1: OBJETIVO ===== -->
+<section class="module" id="m-objetivo">
+  <div class="module-header">
+    <span class="module-tag">Módulo 1</span>
+    <h1>Objetivo e visão geral</h1>
+    <p class="module-subtitle">O que está em jogo no Pré-EG e por que cada etapa importa.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🎯</span> O objetivo do Pré-EG</h2>
+    <p>Garantir que os livros e kits sejam enviados para produção <strong>corretamente</strong> e <strong>dentro do prazo</strong>, com:</p>
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>📦 Logística precisa</h4>
+        <p>Dados fiscais e de entrega conferidos</p>
+      </div>
+      <div class="info-box">
+        <h4>📖 Livros completos</h4>
+        <p>Sem páginas em branco, com material revisado</p>
+      </div>
+      <div class="info-box">
+        <h4>✅ Dados corretos</h4>
+        <p>Nome da escola, professoras e turmas conferidos</p>
+      </div>
+      <div class="info-box">
+        <h4>🚫 Sem refação</h4>
+        <p>Nada de erros que obriguem reimpressão</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🧩</span> As 2 frentes de conferência</h2>
+    <h3>1. Conferência Interna</h3>
+    <p>Antes de falar com a escola, você confere internamente:</p>
+    <div class="check-block">
+      <div class="check-item"><input type="checkbox"><span class="check-label">Ofertas da escola (patrocínio oferecido, responsável pela aplicação)</span></div>
+      <div class="check-item"><input type="checkbox"><span class="check-label">Algum aluno inativo com compra feita?</span></div>
+      <div class="check-item"><input type="checkbox"><span class="check-label">Documento de patrocínio assinado?</span></div>
+      <div class="check-item"><input type="checkbox"><span class="check-label">Escola com pendência de autorização?</span></div>
+      <div class="check-item"><input type="checkbox"><span class="check-label">Escola avisada sobre Visuais Premium e Kits Novos?</span></div>
+    </div>
+
+    <h3>2. Conferência com a Escola</h3>
+    <p>Depois você confirma com a gestora todos os dados que vão para a produção.</p>
+    <div class="alert alert-info">
+      <span class="icon">📋</span>
+      <div>O detalhamento completo do checklist está no <strong>Módulo 2</strong>.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">⚖️</span> Princípios que orientam o trabalho</h2>
+    <div class="info-grid">
+      <div class="info-box" style="border-left-color:var(--rosa)">
+        <h4>Cada história importa</h4>
+        <p>Acreditamos que cada aluno merece o seu livro — fazemos o possível para que todos cheguem completos.</p>
+      </div>
+      <div class="info-box" style="border-left-color:var(--verde)">
+        <h4>Prazo é compromisso</h4>
+        <p>O Evento de Autógrafos tem data marcada. Atrasos quebram a confiança da escola e das famílias.</p>
+      </div>
+      <div class="info-box" style="border-left-color:var(--amarelo)">
+        <h4>Comunicação proativa</h4>
+        <p>Antecipamos problemas, formalizamos pendências e alinhamos expectativas com a gestora.</p>
+      </div>
+      <div class="info-box" style="border-left-color:var(--roxo)">
+        <h4>Consultoria com cuidado</h4>
+        <p>A escola precisa sentir que estamos ali para ajudar, não cobrar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===== MÓDULO 2: CHECKLIST ===== -->
+<section class="module" id="m-checklist">
+  <div class="module-header">
+    <span class="module-tag">Módulo 2</span>
+    <h1>Checklist Pré-EG</h1>
+    <p class="module-subtitle">Marque conforme avança. Seu progresso fica salvo no navegador.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🔍</span> Conferência Interna</h2>
+    <p>Antes de qualquer contato, valide internamente os pontos abaixo:</p>
+
+    <div class="check-block">
+      <div class="check-block-title">Ofertas e patrocínio</div>
+      <div class="check-item"><input type="checkbox" data-c="ci1"><span class="check-label">Patrocínio oferecido?</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ci2"><span class="check-label">Nome do responsável por aplicação na escola</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ci3"><span class="check-label">Documento de patrocínio assinado?</span></div>
+    </div>
+
+    <div class="check-block">
+      <div class="check-block-title">Pendências críticas</div>
+      <div class="check-item"><input type="checkbox" data-c="ci4"><span class="check-label">Algum aluno inativo com compra feita?</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ci5"><span class="check-label">Escola com pendência de autorização?</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ci6"><span class="check-label">Escola avisada sobre Visuais Premium e Kits Novos?</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🏫</span> Conferência com a Escola</h2>
+
+    <div class="check-block">
+      <div class="check-block-title">Dados de cadastro e entrega</div>
+      <div class="check-item"><input type="checkbox" data-c="ce1"><span class="check-label">Endereço com CEP confirmado</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ce2"><span class="check-label">CNPJ confirmado (ou CPF, se PF)</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ce3"><span class="check-label">Endereço de entrega é o mesmo do cadastro?</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ce4"><span class="check-label">Responsável por receber: nome, telefone e e-mail</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ce5"><span class="check-label">Horário para recebimento dos livros</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ce6"><span class="check-label">Endereço alternativo (caso não dê para entregar na escola)</span></div>
+    </div>
+
+    <div class="check-block">
+      <div class="check-block-title">Dados para impressão</div>
+      <div class="check-item"><input type="checkbox" data-c="ce7"><span class="check-label">Nome da escola para impressão confirmado</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ce8"><span class="check-label">Nomes de professores e turmas confirmados</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ce9"><span class="check-label">Data do EA confirmada</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ce10"><span class="check-label">Logo da escola e mensagem do professor inseridas?</span></div>
+    </div>
+
+    <div class="check-block">
+      <div class="check-block-title">Material dos alunos</div>
+      <div class="check-item"><input type="checkbox" data-c="ce11"><span class="check-label">Link da planilha com Visuais Premium e livros comprados</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ce12"><span class="check-label">Ebooks com compras com pendência (material, pagamento, bio ou foto)</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ce13"><span class="check-label">Lista de alunos com pendência de compra</span></div>
+      <div class="check-item"><input type="checkbox" data-c="ce14"><span class="check-label">Lista de materiais pendentes em livros já comprados</span></div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning">
+    <span class="icon">⚡</span>
+    <div><strong>Dica de fluxo:</strong> sempre que possível, divida a conferência em <strong>2 dias de contato</strong> com a gestora. Isso evita sobrecarregar a conversa e aumenta a taxa de resolução.</div>
+  </div>
+</section>
+
+<!-- ===== MÓDULO 3: CADÊNCIA ===== -->
+<section class="module" id="m-cadencia">
+  <div class="module-header">
+    <span class="module-tag">Módulo 3</span>
+    <h1>Cadência D-7 até D0</h1>
+    <p class="module-subtitle">O fluxo dia a dia dos 7 dias úteis antes do Envio Gráfico.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">📞</span> Regra de ouro da cadência</h2>
+    <p>Os contatos marcados com <span class="pill pill-roxo">obrigatório</span> são sempre executados. Os demais só acontecem se o contato obrigatório do dia falhar. Tudo deve ser registrado em <strong>Observação fixada</strong> em Ciclo de Eventos.</p>
+    <div class="alert alert-info">
+      <span class="icon">📝</span>
+      <div>A cadência continua ativa enquanto houver pendências. Se a escola responder e estiver tudo OK, marque <strong>"Checklist para envio gráfico confirmado? = Sim"</strong> e os disparos futuros são interrompidos.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">📅</span> Linha do tempo</h2>
+    <div class="timeline">
+      <div class="timeline-day">
+        <div class="timeline-marker"><div class="day-badge"><span class="big">-7</span><span class="small">dias</span></div></div>
+        <div class="day-content">
+          <h4>Abertura da cadência <span class="pill pill-roxo">obrigatório</span></h4>
+          <div class="day-actions">
+            <div class="action-line">2 tentativas de ligação em horários alternados</div>
+            <div class="action-line">Contato via BLIP — confirmar disparo automático; se não houve, enviar manual</div>
+            <div class="action-line">Template: <code>carteiro_eventos_confirmacao_dados_cad1</code></div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-day">
+        <div class="timeline-marker"><div class="day-badge"><span class="big">-5</span><span class="small">dias</span></div></div>
+        <div class="day-content">
+          <h4>Reforço de contato <span class="pill pill-roxo">obrigatório</span></h4>
+          <div class="day-actions">
+            <div class="action-line">2 tentativas de ligação em horários alternados</div>
+            <div class="action-line">Contato via BLIP se ainda não tivemos retorno</div>
+            <div class="action-line">Template: <code>carteiro_eventos_5_dias_eg</code></div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-day">
+        <div class="timeline-marker"><div class="day-badge warning"><span class="big">-3</span><span class="small">dias</span></div></div>
+        <div class="day-content">
+          <h4>Atenção: pendências ou sem checklist <span class="day-tag">condicional</span></h4>
+          <div class="day-actions">
+            <div class="action-line">2 tentativas de ligação em horários alternados</div>
+            <div class="action-line">BLIP se ainda sem retorno</div>
+            <div class="action-line">Iniciar formalização por e-mail (Tentativa 1)</div>
+            <div class="action-line">Template: <code>carteiro_eventos_3_dias_eg</code></div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-day">
+        <div class="timeline-marker"><div class="day-badge warning"><span class="big">-2</span><span class="small">dias</span></div></div>
+        <div class="day-content">
+          <h4>Foco do dia em pendências <span class="day-tag">condicional</span></h4>
+          <div class="day-actions">
+            <div class="action-line">Tentativa de ligação</div>
+            <div class="action-line">BLIP — template <code>carteiro_eventos_2_dias_eg</code></div>
+            <div class="action-line">E-mail de Tentativa 2 (formalização)</div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-day">
+        <div class="timeline-marker"><div class="day-badge urgent"><span class="big">-1</span><span class="small">dia</span></div></div>
+        <div class="day-content">
+          <h4>Última chance de ajustar <span class="day-tag">crítico</span></h4>
+          <div class="day-actions">
+            <div class="action-line">Tentativa de ligação (foco total)</div>
+            <div class="action-line">BLIP se necessário</div>
+            <div class="action-line">E-mail de Tentativa 3 + envio do relatório de livros comprados</div>
+            <div class="action-line">Combinar liberação de PDF para famílias sem livro físico</div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-day">
+        <div class="timeline-marker"><div class="day-badge go"><span class="big">D0</span><span class="small">EG</span></div></div>
+        <div class="day-content">
+          <h4>Dia do Envio Gráfico</h4>
+          <div class="day-actions">
+            <div class="action-line">Se houver pendência: foco em ligação</div>
+            <div class="action-line">Avisar a escola que o Envio Gráfico aconteceu</div>
+            <div class="action-line">Template: <code>carteiro_eventos_dia_eg_okproducao</code> ou <code>carteiro_eventos_dia_eg_pendencias</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🗺️</span> Fluxograma resumido</h2>
+    <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#6B4EFF"/>
+        </marker>
+      </defs>
+      <line x1="105" y1="110" x2="153" y2="110" stroke="#6B4EFF" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="237" y1="110" x2="288" y2="110" stroke="#6B4EFF" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="372" y1="110" x2="423" y2="110" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="507" y1="110" x2="558" y2="110" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="642" y1="110" x2="693" y2="110" stroke="#EF4444" stroke-width="2" marker-end="url(#arrow)"/>
+      <g><circle cx="60" cy="110" r="42" fill="#6B4EFF"/><text x="60" y="106" text-anchor="middle" fill="white" font-size="18" font-weight="700">D-7</text><text x="60" y="125" text-anchor="middle" fill="white" font-size="10">Abertura</text></g>
+      <g><circle cx="195" cy="110" r="42" fill="#6B4EFF"/><text x="195" y="106" text-anchor="middle" fill="white" font-size="18" font-weight="700">D-5</text><text x="195" y="125" text-anchor="middle" fill="white" font-size="10">Reforço</text></g>
+      <g><circle cx="330" cy="110" r="42" fill="#F59E0B"/><text x="330" y="106" text-anchor="middle" fill="white" font-size="18" font-weight="700">D-3</text><text x="330" y="125" text-anchor="middle" fill="white" font-size="10">Atenção</text></g>
+      <g><circle cx="465" cy="110" r="42" fill="#F59E0B"/><text x="465" y="106" text-anchor="middle" fill="white" font-size="18" font-weight="700">D-2</text><text x="465" y="125" text-anchor="middle" fill="white" font-size="10">Foco</text></g>
+      <g><circle cx="600" cy="110" r="42" fill="#EF4444"/><text x="600" y="106" text-anchor="middle" fill="white" font-size="18" font-weight="700">D-1</text><text x="600" y="125" text-anchor="middle" fill="white" font-size="10">Crítico</text></g>
+      <g><circle cx="735" cy="110" r="42" fill="#22C55E"/><text x="735" y="106" text-anchor="middle" fill="white" font-size="18" font-weight="700">D0</text><text x="735" y="125" text-anchor="middle" fill="white" font-size="10">Envio</text></g>
+      <text x="400" y="30" text-anchor="middle" fill="#111827" font-size="14" font-weight="700">Cadência Pré-EG</text>
+      <text x="400" y="195" text-anchor="middle" fill="#6B7280" font-size="11">Obrigatório → Condicional (se pendência) → Crítico → Confirmação</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ===== MÓDULO 4: DISCURSO ===== -->
+<section class="module" id="m-discurso">
+  <div class="module-header">
+    <span class="module-tag">Módulo 4</span>
+    <h1>Discurso completo</h1>
+    <p class="module-subtitle">Roteiro para a ligação com a gestora — adapte conforme o cenário.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="t-abertura">Abertura</button>
+    <button class="tab" data-tab="t-mat-ok">Sem pendências</button>
+    <button class="tab" data-tab="t-mat-pend">Com pendências</button>
+    <button class="tab" data-tab="t-dados">Confirmar dados</button>
+    <button class="tab" data-tab="t-logo">Logo e mensagem</button>
+    <button class="tab" data-tab="t-fech">Fechamento</button>
+  </div>
+
+  <div class="tab-content active" id="t-abertura">
+    <div class="card">
+      <h2><span class="icon">👋</span> Abertura</h2>
+      <div class="speech-box">
+        <p>"Oi, <em>[GESTORA]</em>! Sou o(a) <em>[SEU NOME]</em> aqui da Estante Mágica e estou ligando para ajudar o(a) seu/sua consultor(a), que queria conversar com você sobre:</p>
+        <p>• o material dos alunos na plataforma<br>• os seus dados cadastrados conosco."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="t-mat-ok">
+    <div class="card">
+      <h2><span class="icon">🎉</span> Sem pendências de material</h2>
+      <div class="speech-box">
+        <p>"Queria começar te dando parabéns porque vocês já colocaram o material completo na plataforma! Isso é reflexo do trabalho duro e dedicação de vocês!"</p>
+      </div>
+      <div class="alert alert-success">
+        <span class="icon">✅</span>
+        <div>Quando a escola já está com tudo certo, valorize a conquista. Isso fortalece a relação e abre espaço para os próximos pedidos (logo, mensagem, revisão).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="t-mat-pend">
+    <div class="card">
+      <h2><span class="icon">⚠️</span> Com pendências de material</h2>
+      <div class="speech-box">
+        <p>"Vi que ainda temos algumas pendências na plataforma, não é?"</p>
+        <p>"As que aparecem aqui são <em>[NOMES se forem poucos; se forem muitos, avisar que vai mandar planilha]</em>, me conta um pouco do que está acontecendo com esses casos?"</p>
+        <p>"<em>[GESTORA]</em>, é muito importante colocarmos o material na plataforma o mais rápido possível para garantir que vocês e as famílias tenham tempo hábil para visualizar os e-books e fazer uma revisão geral. Podemos combinar de tentarem fazer isso em até 2 dias, ou seja, até a data <em>XX</em>?"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="t-dados">
+    <div class="card">
+      <h2><span class="icon">📋</span> Confirmação de dados cadastrais</h2>
+      <div class="speech-box">
+        <p>"Agora falando dos dados cadastrados conosco, precisamos conferir se estão todos certos para mais na frente não termos nenhuma surpresa com o envio dos livros, ok?"</p>
+        <p><strong>Pontos a confirmar:</strong></p>
+        <p>• Endereço: "O endereço de vocês é <em>[ENDEREÇO DA RACHEL]</em>?" (sem número → pegar ponto de referência)<br>
+        • CEP: "O CEP é <em>[CEP]</em>?"<br>
+        • Endereço de entrega coincide com o cadastro?<br>
+        • Quem vai receber: "Vai ser o(a) <em>[NOME, TELEFONE, E-MAIL]</em>?"<br>
+        • CNPJ (ou CPF, se PF)<br>
+        • Horário de funcionamento da escola<br>
+        • Endereço alternativo (plano B)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="t-logo">
+    <div class="card">
+      <h2><span class="icon">🎨</span> Sem logo do professor ou mensagem</h2>
+      <div class="speech-box">
+        <p>"<em>[GESTORA]</em>, outro ponto muito importante para a gente é a participação de vocês, a escola e a solidificação eterna do trabalho que vocês aplicaram com os alunos. Por isso temos dois recursos muito importantes: a logo da escola e a mensagem dos professores."</p>
+        <p>"Já que vocês estão com todo o material certinho na plataforma, agora é uma ótima hora para olharmos para isso. Você sabe como fazer esse passo a passo?"</p>
+        <p>"Se precisarem de qualquer ajuda na plataforma, com imagens ou textos, podem me chamar. Vou enviar um WhatsApp ou e-mail agorinha para que vocês salvem meu contato."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="t-fech">
+    <div class="card">
+      <h2><span class="icon">🤝</span> Fechamento</h2>
+      <h3>Sem pendências</h3>
+      <div class="speech-box">
+        <p>"Agora que falamos de todos os pontos mais importantes, queria combinar com você de darem uma olhada geral nos livros para conferirem se está tudo certo. Assim conseguimos ter certeza que nenhum errinho vai passar despercebido, ok?"</p>
+      </div>
+      <h3>Com pendências</h3>
+      <div class="speech-box">
+        <p>"Agora que vimos que está tudo certinho, vamos continuar nos falando sobre as pendências que restaram. Vou te mandar por e-mail ou WhatsApp a lista certinha — por onde você prefere receber?"</p>
+      </div>
+      <h3>Próximo contato</h3>
+      <div class="speech-box">
+        <p>"Posso deixar marcado de nos falarmos no dia <em>[1 dia pré-EG se sem pendência; em 2 dias se com pendência]</em>?"</p>
+        <p>"Ah, e queria te pedir para nesse meio tempo conferir se os nomes das professoras e da escola estão corretos, assim garantimos que na hora de imprimir vamos ficar com as informações certas!"</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MÓDULO 5: ROTINA E PROCESSOS ===== -->
+<section class="module" id="m-rotina">
+  <div class="module-header">
+    <span class="module-tag">Módulo 5</span>
+    <h1>Rotina e processos</h1>
+    <p class="module-subtitle">Como organizar o trabalho e registrar as informações certas.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">📌</span> To-dos obrigatórios</h2>
+    <p>Para cada escola no Pré-EG, você precisa ter:</p>
+    <div class="check-block">
+      <div class="check-item"><input type="checkbox"><span class="check-label">Observação fixada com o Checklist da Fase 1 (Pré-EG) em Ciclo de Eventos</span></div>
+      <div class="check-item"><input type="checkbox"><span class="check-label">Checklist preenchido e atualizado a cada efetividade com a gestora</span></div>
+      <div class="check-item"><input type="checkbox"><span class="check-label">Propriedade "Checklist para envio gráfico confirmado?" preenchida (Sim/Não)</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🎯</span> Pontos de atenção</h2>
+    <div class="info-grid">
+      <div class="info-box" style="border-left-color:var(--roxo)">
+        <h4>Divida em 2 dias</h4>
+        <p>Idealmente, faça a conferência em 2 dias de contato — diminui o volume e aumenta a resolução.</p>
+      </div>
+      <div class="info-box" style="border-left-color:var(--amarelo)">
+        <h4>Cadência ativa</h4>
+        <p>A cadência segue ativa enquanto houver pendências. Marque "Sim" no checklist para interromper.</p>
+      </div>
+      <div class="info-box" style="border-left-color:var(--rosa)">
+        <h4>Prioridade 1: dados</h4>
+        <p>Confirmação de dados faltantes é prioridade. Se não der hoje, remarque amanhã com prioridade.</p>
+      </div>
+      <div class="info-box" style="border-left-color:var(--verde)">
+        <h4>Contato D-1</h4>
+        <p>Mesmo escolas sem pendência têm contato confirmatório 1 dia antes do EG.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">⚡</span> Quando forçar o EG ou alterar prazo</h2>
+    <p>Se houver pendências sensíveis até a data do EG, você tem duas opções dependendo da gravidade:</p>
+    <div class="alert alert-warning">
+      <span class="icon">⚠️</span>
+      <div><strong>Forçar EG:</strong> quando a pendência é pequena e os livros podem ser enviados com ajuste mínimo (ex: página interativa para alunos com pouca pendência).</div>
+    </div>
+    <div class="alert alert-danger">
+      <span class="icon">🚨</span>
+      <div><strong>Alterar prazo:</strong> quando a pendência é crítica (ex: sem dados cadastrais ou alunos com mais de 50% do livro em branco). Enviar e-mail formalizando a alteração.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MÓDULO 6: PONTOS CRÍTICOS ===== -->
+<section class="module" id="m-criticos">
+  <div class="module-header">
+    <span class="module-tag">Módulo 6</span>
+    <h1>Pontos críticos e objeções</h1>
+    <p class="module-subtitle">Como decidir entre enviar para produção, ajustar ou alterar o prazo.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">📤</span> Casos: enviamos para produção mesmo assim</h2>
+    <div class="info-grid">
+      <div class="info-box" style="border-left-color:var(--verde)">
+        <h4>Confirmação de dados cadastrais</h4>
+        <p>Temos os dados, mas não conseguimos confirmar com a gestora. Validar por internet e enviar.</p>
+      </div>
+      <div class="info-box" style="border-left-color:var(--verde)">
+        <h4>Alunos com pouca pendência (&lt;20%)</h4>
+        <p>Enviar com página interativa nos espaços faltantes.</p>
+      </div>
+      <div class="info-box" style="border-left-color:var(--verde)">
+        <h4>Sem confirmação de dados</h4>
+        <p>Usar os dados que temos cadastrados.</p>
+      </div>
+      <div class="info-box" style="border-left-color:var(--verde)">
+        <h4>Sem mensagem do professor</h4>
+        <p>Não impede o envio. Tentar reforçar nos próximos contatos.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">📧</span> Casos: enviamos e-mail de alteração de prazo</h2>
+    <div class="info-grid">
+      <div class="info-box" style="border-left-color:var(--vermelho)">
+        <h4>Aluno com 50%+ do livro em branco</h4>
+        <p>Não temos como entregar um produto digno. Formalizar alteração.</p>
+      </div>
+      <div class="info-box" style="border-left-color:var(--vermelho)">
+        <h4>Ausência de dados cadastrais</h4>
+        <p>Sem endereço, sem entrega. Sem EG até resolver.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🧠</span> Possíveis problemas e como abordar</h2>
+    <div class="tabs">
+      <button class="tab active" data-tab="t-prob1">Alunos não fazem</button>
+      <button class="tab" data-tab="t-prob2">Professoras sem tempo</button>
+      <button class="tab" data-tab="t-prob3">Aluno com dificuldades</button>
+      <button class="tab" data-tab="t-prob4">"Vou colocar"</button>
+    </div>
+
+    <div class="tab-content active" id="t-prob1">
+      <p>Entender se é uma questão específica. Falar que podemos acompanhar caso a caso, apresentar a ideia da <strong>página interativa</strong> para a gestora já conhecer, e reforçar o prazo máximo (1 dia antes do EG).</p>
+    </div>
+    <div class="tab-content" id="t-prob2">
+      <p>Investigar: conseguem mais ajuda? Os alunos podem fazer a digitação? Fazer em 1 folha só ajudaria? Buscar alternativas com a gestora.</p>
+    </div>
+    <div class="tab-content" id="t-prob3">
+      <p>Entender a fundo qual a dificuldade. Tratar caso a caso, com sensibilidade.</p>
+    </div>
+    <div class="tab-content" id="t-prob4">
+      <p>Quando a gestora garante que vai colocar: reforçar o prazo (1 dia antes do EG) para ter uma gordurinha de segurança caso algo dê errado.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MÓDULO 7: E-MAILS ===== -->
+<section class="module" id="m-emails">
+  <div class="module-header">
+    <span class="module-tag">Módulo 7</span>
+    <h1>Modelos de e-mail</h1>
+    <p class="module-subtitle">Formalize pendências e tentativas quando o contato direto falhar.</p>
+  </div>
+
+  <div class="alert alert-info">
+    <span class="icon">📨</span>
+    <div>A partir de <strong>4 dias do EG sem retorno</strong>, começamos a formalizar por e-mail. Use os modelos abaixo de acordo com o dia.</div>
+  </div>
+
+  <div class="template-card">
+    <div class="template-header">
+      <div>
+        <div class="template-name">📧 Tentativa 1 — 3 dias para o EG</div>
+        <div class="template-code">Formaliza pendências e resoluções diante da falta de contato</div>
+      </div>
+      <span class="pill pill-amarelo">D-3</span>
+    </div>
+    <div class="template-body email" id="email1">Oi [GESTORA], tudo bem?
+
+Estamos mandando essa mensagem para você pois temos tentado contato a alguns dias e não estamos conseguindo nos comunicar.
+
+Como estamos nos últimos dias e ainda temos algumas pendências importantes para conversar, e não temos mais tempo para segurar o material antes da impressão, queria deixar mapeado para vocês os pontos que encontramos e as resoluções que conseguimos diante da situação.
+
+[ESCOLHER BLOCO CONFORME O CASO]
+
+▸ SEM DADOS CADASTRAIS
+Como não temos as informações cadastrais importantes para o envio dos livros, não conseguimos completar esse envio. Diante disso, precisamos alterar a data do Dia de Autógrafos — sem um endereço, não temos como garantir o recebimento dos livros.
+
+▸ ALUNO COM ALGUMAS PENDÊNCIAS
+Estamos com alguns alunos com compra, mas que permanecem com pendências. Conseguimos segurar o envio dos livros até hoje no final do dia. Passando desse prazo, não conseguimos mais alterar o material.
+
+Como prezamos muito pela conclusão desse momento dos alunos, enviaremos os livros com páginas interativas nos espaços que estão faltando materiais. Vou anexar um modelo dessas páginas para vocês verem e não serem pegos de surpresa.
+
+▸ SEM CONFIRMAÇÃO DE REVISÃO
+Não conseguimos confirmar com vocês se a revisão dos livros foi feita. Como vocês conhecem os alunos melhor do que ninguém, essa parte é muito importante. Temos até o final do dia para fazer alterações; caso contrário, enviaremos os livros como estão para a impressão.
+
+▸ PARA TODOS OS CASOS
+Estamos animados para receber os materiais até hoje às 23:59, assim conseguimos garantir que todos os materiais estarão perfeitos do jeito que os nossos autores imaginaram!</div>
+    <div class="template-actions">
+      <button class="btn btn-primary" onclick="copyText('email1', this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <div class="template-card">
+    <div class="template-header">
+      <div>
+        <div class="template-name">📧 Tentativa 2 — 2 dias para o EG</div>
+        <div class="template-code">Ligação com diagnóstico das pendências e plano de ação</div>
+      </div>
+      <span class="pill pill-vermelho">D-2</span>
+    </div>
+    <div class="template-body email" id="email2">Oi, [GESTORA]! [SEU NOME] da Estante Mágica aqui, tudo bem?
+
+Como combinado, estou te ligando para conversarmos sobre as pendências dos materiais dos alunos na plataforma.
+
+▸ COM PENDÊNCIAS
+Vi que ainda temos as pendências [LISTAR — se forem poucas, falar de cada caso; se forem muitas, falar quantos alunos com pendência].
+
+Queria entender com você um pouco mais do que está acontecendo, porque a Estante Mágica acredita que cada história precisa ser contada e queremos muito que todos os seus alunos tenham o seu próprio livro.
+
+Se entendermos um pouco mais de onde está sendo mais complicado para vocês, podemos juntos pensar em qual a melhor forma de ajudar.
+
+Possíveis problemas (escolher conforme a fala da gestora):
+• Alunos não fazem material → entender o caso; falar da página interativa; reforçar prazo (1 dia antes do EG)
+• Professoras sem tempo → buscar alternativas (apoio, digitação, 1 folha)
+• Alunos com dificuldades → tratar caso a caso
+• Garante que vai colocar → reforçar prazo (1 dia antes do EG)
+
+▸ FECHAMENTO
+Perfeito então, conto com você para que com esses combinados, a gente consiga se falar no dia [1 ANTES DO EG] e deixar tudo prontinho para a impressão.
+
+E me conta, vocês conseguiram confirmar se o nome da escola e dos professores de cada turma estão certinhos?</div>
+    <div class="template-actions">
+      <button class="btn btn-primary" onclick="copyText('email2', this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <div class="template-card">
+    <div class="template-header">
+      <div>
+        <div class="template-name">📧 Tentativa 3 — 1 dia para o EG</div>
+        <div class="template-code">Confirmação final + relatório + alinhamento sobre PDF</div>
+      </div>
+      <span class="pill pill-vermelho">D-1</span>
+    </div>
+    <div class="template-body email" id="email3">Oi [GESTORA]!
+Tudo bem com você?
+
+Estou te ligando hoje para vermos se ficou tudo certinho com as revisões e ver se está tudo certo para enviarmos os livros para a produção!
+
+▸ Se sim: Perfeito! Vou te enviar nesse exato momento.
+▸ Se não: Precisamos enviar hoje até o final do dia para não corrermos riscos para a entrega no dia de autógrafos. Me conta o que aconteceu para resolvermos!
+
+Para não termos surpresas mais para a frente, queria confirmar os dados novamente:
+• Logo + mensagem do professor
+• Conferência do nome da escola
+• Conferência dos nomes das professoras
+• Endereço de entrega e CEP
+• Dados fiscais
+• Horário para recebimento
+
+Além disso, vou te mandar um relatório dos livros que foram comprados até esse exato momento, assim você consegue ter essa informação 100% atualizada.
+
+Um ponto muito importante: em relação a possíveis famílias que podem querer o PDF. Como algumas famílias não garantiram o exemplar, às vezes elas entram em contato querendo pelo menos o PDF. Para liberarmos, precisamos de um ok de vocês. O que acham?
+
+Semana que vem nos falamos novamente para passar o link de rastreio dos livros (ainda em produção). Os livros chegam no máximo 7 dias antes do Dia de Autógrafos cadastrado na plataforma.</div>
+    <div class="template-actions">
+      <button class="btn btn-primary" onclick="copyText('email3', this)">📋 Copiar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MÓDULO 8: TEMPLATES WHATSAPP ===== -->
+<section class="module" id="m-templates">
+  <div class="module-header">
+    <span class="module-tag">Módulo 8</span>
+    <h1>Templates WhatsApp</h1>
+    <p class="module-subtitle">Mensagens prontas para usar no BLIP. Clique em "Copiar" para usar.</p>
+  </div>
+
+  <div class="card" style="background:linear-gradient(135deg,#FFF,#F0FDF4);border-left:4px solid #25D366">
+    <h2><span class="icon">💬</span> Como usar</h2>
+    <p>Cada template tem um <strong>código</strong> que corresponde ao gatilho no BLIP. Os campos entre <code>{{ }}</code> devem ser preenchidos antes do envio. Use a busca abaixo para encontrar rápido.</p>
+    <input type="text" id="searchTpl" placeholder="🔍 Buscar template (ex: 5 dias, produção, pendência)..." style="width:100%;padding:12px 16px;border:1px solid var(--cinza-200);border-radius:10px;font-size:14px;margin-top:12px">
+  </div>
+
+  <div id="tplList">
+    <div class="template-card" data-search="confirmacao dados cad1 d-7 7 dias abertura cadastrais">
+      <div class="template-header">
+        <div>
+          <div class="template-name">💬 Confirmação de dados — D-7</div>
+          <div class="template-code">carteiro_eventos_confirmacao_dados_cad1</div>
+        </div>
+        <span class="pill pill-roxo">D-7</span>
+      </div>
+      <div class="template-body" id="tpl1">Oi, tudo bem?💙
+
+Estamos na reta final e precisamos confirmar algumas *informações importantes para a entrega dos livros*!
+*Os dados abaixo estão corretos?* 😁
+*- Endereço:* {{1}}
+*- CEP:* {{2}}
+*- CNPJ:* {{3}}
+*- Dados de quem vai receber os livros:* {{4}}
+*- Horário para recebimento dos livros:*  9h às 18h
+*- Nome da escola para impressão*: {{5}}
+*- Data do Evento de Autógrafos:* {{6}}</div>
+      <div class="template-actions"><button class="btn btn-primary" onclick="copyText('tpl1', this)">📋 Copiar</button></div>
+    </div>
+
+    <div class="template-card" data-search="5 dias eg reforço cinco">
+      <div class="template-header">
+        <div>
+          <div class="template-name">💬 5 dias para o EG</div>
+          <div class="template-code">carteiro_eventos_5_dias_eg</div>
+        </div>
+        <span class="pill pill-roxo">D-5</span>
+      </div>
+      <div class="template-body" id="tpl2">{{1}}, tudo bem com você?
+Temos tentado falar com você sobre algumas pendências muito importantes, mas ainda não conseguimos...
+
+Como estamos nos momentos finais para a produção dos livros, precisamos muito desse contato para garantirmos que as obras vão chegar perfeitas para vocês. 🌟
+
+Vamos marcar um papo rapidinho? Quando fica melhor para você?
+Se preferir, podemos conversar por aqui também! 😊</div>
+      <div class="template-actions"><button class="btn btn-primary" onclick="copyText('tpl2', this)">📋 Copiar</button></div>
+    </div>
+
+    <div class="template-card" data-search="3 dias eg três pendências preocupação">
+      <div class="template-header">
+        <div>
+          <div class="template-name">💬 3 dias para o EG</div>
+          <div class="template-code">carteiro_eventos_3_dias_eg</div>
+        </div>
+        <span class="pill pill-amarelo">D-3</span>
+      </div>
+      <div class="template-body" id="tpl3">Olá {{1}}, tudo bem?
+
+Estamos ficando preocupados com o prazo para fazer os ajustes finais. 💜
+
+Não temos conseguido falar com vocês sobre alguns pontos imprescindíveis para fazermos com que os livros não só cheguem no prazo, mas também do jeitinho que os seus alunos tanto sonham.
+
+Poderia me dizer um horário para nos falarmos por telefone?
+Se preferir, podemos conversar por aqui também!</div>
+      <div class="template-actions"><button class="btn btn-primary" onclick="copyText('tpl3', this)">📋 Copiar</button></div>
+    </div>
+
+    <div class="template-card" data-search="2 dias eg redefinição data urgente">
+      <div class="template-header">
+        <div>
+          <div class="template-name">💬 2 dias para o EG — redefinição de data</div>
+          <div class="template-code">carteiro_eventos_2_dias_eg</div>
+        </div>
+        <span class="pill pill-vermelho">D-2</span>
+      </div>
+      <div class="template-body" id="tpl4">Bom dia {{1}}, como estão as coisas por aí?
+
+Hoje é o nosso último dia para fazer alterações e conseguir garantir um Dia de Autógrafos perfeito para vocês, mas como não estamos conseguindo contato, não sabemos se vocês vão conseguir receber os livros para o Evento de vocês. 😢
+
+Precisamos urgentemente falar com vocês e confirmar algumas informações pendentes.</div>
+      <div class="template-actions"><button class="btn btn-primary" onclick="copyText('tpl4', this)">📋 Copiar</button></div>
+    </div>
+
+    <div class="template-card" data-search="revisao pre eg revisar parabéns">
+      <div class="template-header">
+        <div>
+          <div class="template-name">💬 Revisão Pré-EG (parabéns + lembrete)</div>
+          <div class="template-code">carteiro_eventos_revisão_pre_eg</div>
+        </div>
+        <span class="pill pill-roxo">Pré-EG</span>
+      </div>
+      <div class="template-body" id="tpl5">Oi, {{1}}! Tudo bem com você?
+
+Estamos passando aqui para te dar um hiper parabéns pelos livros que vocês e seus alunos fizeram este ano; eles estão incríveis! ✨
+
+Como está quase na hora de enviarmos os livros para a produção, queríamos pedir para vocês não esquecerem de revisar as produções, nomes dos alunos, dos professores e da escola, assim não deixamos nenhum errinho passar. 🤓
+
+Se precisarem fazer qualquer alteração, é só falar com a gente por aqui que te ajudamos rapidinho!
+
+Os livros serão impressos no dia {{2}}, então ficamos combinados de vocês conferirem tudo até o dia {{3}}, beleza? 💙</div>
+      <div class="template-actions"><button class="btn btn-primary" onclick="copyText('tpl5', this)">📋 Copiar</button></div>
+    </div>
+
+    <div class="template-card" data-search="dia eg pendencias ultimo">
+      <div class="template-header">
+        <div>
+          <div class="template-name">💬 Dia do EG — com pendências</div>
+          <div class="template-code">carteiro_eventos_dia_eg_pendencias</div>
+        </div>
+        <span class="pill pill-vermelho">D0</span>
+      </div>
+      <div class="template-body" id="tpl6">Oi {{1}}, tudo bem?
+
+Estamos te mandando essa mensagem porque hoje é o último dia para enviarmos os livros para a produção e ainda temos pendências a resolver. 😔
+
+Se não conseguirmos ajustar isso, os livros podem acabar indo com erros ou até mesmo depois do Dia de Autógrafos de vocês.
+
+Não queremos que isso aconteça, por isso queremos muito falar com vocês!</div>
+      <div class="template-actions"><button class="btn btn-primary" onclick="copyText('tpl6', this)">📋 Copiar</button></div>
+    </div>
+
+    <div class="template-card" data-search="dia eg producao envio feito ok">
+      <div class="template-header">
+        <div>
+          <div class="template-name">💬 Dia do EG — envio para produção OK</div>
+          <div class="template-code">carteiro_eventos_dia_eg_okproducao</div>
+        </div>
+        <span class="pill pill-verde">D0</span>
+      </div>
+      <div class="template-body" id="tpl7">Oi {{1}}, tudo bem?😁
+Estamos enviando essa mensagem só para te avisar que os livros já estão com a gráfica sendo impressos para chegarem o mais rápido possível para vocês!📚
+
+Semana que vem vamos nos falar para garantir que o Evento de Autógrafos de vocês vai ser incrível e também para te atualizarmos do status dos livros impressos, ok?
+
+Se precisarem de ajuda nesse meio tempo, podem chamar a gente!💜</div>
+      <div class="template-actions"><button class="btn btn-primary" onclick="copyText('tpl7', this)">📋 Copiar</button></div>
+    </div>
+
+    <div class="template-card" data-search="envio livro produção previsão entrega quantidade">
+      <div class="template-header">
+        <div>
+          <div class="template-name">💬 Livros em produção (automático)</div>
+          <div class="template-code">auto_eventos_envio_livro_producao</div>
+        </div>
+        <span class="pill pill-verde">Pós-EG</span>
+      </div>
+      <div class="template-body" id="tpl8">Olá, {{1}}.
+
+Para cumprir nosso compromisso e evitar qualquer atraso, já demos início à produção dos livros na gráfica.
+
+Aqui estão algumas informações importantes sobre o seu pedido:
+
+- *Entrega:* no endereço confirmado previamente
+- *Previsão de entrega:* até 7 dias antes do Evento de Autógrafos
+- *Quantidade total de livros:* {{2}}
+
+Caso precise, estamos disponíveis para esclarecer dúvidas sobre o processo de produção.</div>
+      <div class="template-actions"><button class="btn btn-primary" onclick="copyText('tpl8', this)">📋 Copiar</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FLASHCARDS ===== -->
+<section class="module" id="m-flashcards">
+  <div class="module-header">
+    <span class="module-tag">Fixação</span>
+    <h1>Flashcards</h1>
+    <p class="module-subtitle">Clique em cada card para virar e revelar a resposta.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🧠</span> Conceitos-chave do Pré-EG</h2>
+    <p>Use os flashcards para fixar as informações mais importantes. Vire o card e teste seu conhecimento.</p>
+    <div class="flashcards">
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-side flashcard-front">
+          <div class="flashcard-tag">Pergunta</div>
+          <div>Quando começa o Pré-EG?</div>
+          <div class="flashcard-hint">Clique para ver →</div>
+        </div>
+        <div class="flashcard-side flashcard-back">
+          <div class="flashcard-tag">Resposta</div>
+          <div>7 dias úteis antes do Envio Gráfico.</div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-side flashcard-front">
+          <div class="flashcard-tag">Pergunta</div>
+          <div>Quais dias têm contato obrigatório?</div>
+          <div class="flashcard-hint">Clique para ver →</div>
+        </div>
+        <div class="flashcard-side flashcard-back">
+          <div class="flashcard-tag">Resposta</div>
+          <div>D-7 e D-5. Os demais são condicionais — só se ainda houver pendência.</div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-side flashcard-front">
+          <div class="flashcard-tag">Pergunta</div>
+          <div>O que fazer com aluno com 50%+ do livro em branco?</div>
+          <div class="flashcard-hint">Clique para ver →</div>
+        </div>
+        <div class="flashcard-side flashcard-back">
+          <div class="flashcard-tag">Resposta</div>
+          <div>Enviar e-mail formalizando alteração de prazo. Não envia para produção assim.</div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-side flashcard-front">
+          <div class="flashcard-tag">Pergunta</div>
+          <div>Aluno com menos de 20% de pendência: o que fazer?</div>
+          <div class="flashcard-hint">Clique para ver →</div>
+        </div>
+        <div class="flashcard-side flashcard-back">
+          <div class="flashcard-tag">Resposta</div>
+          <div>Enviar para produção com página interativa nos espaços faltantes.</div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-side flashcard-front">
+          <div class="flashcard-tag">Pergunta</div>
+          <div>Qual a propriedade que interrompe a cadência?</div>
+          <div class="flashcard-hint">Clique para ver →</div>
+        </div>
+        <div class="flashcard-side flashcard-back">
+          <div class="flashcard-tag">Resposta</div>
+          <div>"Checklist para envio gráfico confirmado?" marcado como Sim.</div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-side flashcard-front">
+          <div class="flashcard-tag">Pergunta</div>
+          <div>Sem dados cadastrais: enviamos os livros?</div>
+          <div class="flashcard-hint">Clique para ver →</div>
+        </div>
+        <div class="flashcard-side flashcard-back">
+          <div class="flashcard-tag">Resposta</div>
+          <div>Não. Sem endereço, sem entrega. Formalize alteração de prazo por e-mail.</div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-side flashcard-front">
+          <div class="flashcard-tag">Pergunta</div>
+          <div>A partir de qual dia formalizamos por e-mail?</div>
+          <div class="flashcard-hint">Clique para ver →</div>
+        </div>
+        <div class="flashcard-side flashcard-back">
+          <div class="flashcard-tag">Resposta</div>
+          <div>A partir de 4 dias do EG, se ainda não houve retorno da escola.</div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-side flashcard-front">
+          <div class="flashcard-tag">Pergunta</div>
+          <div>Qual a prioridade 1 na confirmação?</div>
+          <div class="flashcard-hint">Clique para ver →</div>
+        </div>
+        <div class="flashcard-side flashcard-back">
+          <div class="flashcard-tag">Resposta</div>
+          <div>Dados faltantes. Se não conseguir hoje, remarcar como prioridade no dia seguinte.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SIMULADOR DE CENÁRIOS ===== -->
+<section class="module" id="m-simulador">
+  <div class="module-header">
+    <span class="module-tag">Fixação</span>
+    <h1>Simulador de cenários</h1>
+    <p class="module-subtitle">Pratique decisões reais. Escolha a melhor ação para cada situação.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🎮</span> Cenário 1 — Escola sem retorno em D-3</h2>
+    <div class="scenario">
+      <div class="scenario-context">
+        <strong>Contexto:</strong> Hoje é D-3. Você tentou ligação no D-7, D-5 e D-3 sem sucesso. A gestora não responde WhatsApp. A escola tem 3 alunos com pendência de material (menos de 15% do livro em branco) e os dados cadastrais ainda não foram confirmados.
+      </div>
+      <button class="scenario-choice" onclick="showResult(this,'wrong','Esperar não resolve. Em D-3 já entramos em fase de formalização — é hora de agir.')">
+        A) Esperar até D-1 para tentar de novo
+      </button>
+      <button class="scenario-choice" onclick="showResult(this,'wrong','Cancelar é última instância. Existem caminhos antes (página interativa, dados internos).')">
+        B) Cancelar a produção dos 3 livros pendentes
+      </button>
+      <button class="scenario-choice" onclick="showResult(this,'correct','Perfeito! Em D-3 formalizamos por e-mail (Tentativa 1) explicando que enviaremos com página interativa e alertando sobre os dados.')">
+        C) Enviar e-mail de Tentativa 1 + manter ligação + sinalizar página interativa
+      </button>
+      <button class="scenario-choice" onclick="showResult(this,'wrong','Enviar sem o aviso quebra a expectativa da escola e gera ruído depois.')">
+        D) Enviar para produção sem avisar a gestora
+      </button>
+      <div class="scenario-result" id="r1"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🎮</span> Cenário 2 — Aluno com 60% do livro em branco</h2>
+    <div class="scenario">
+      <div class="scenario-context">
+        <strong>Contexto:</strong> É D-2 e a gestora confirma que a aluna Marina não conseguiu fazer mais de 40% do material. A família já comprou o exemplar. O EA é semana que vem.
+      </div>
+      <button class="scenario-choice" onclick="showResult(this,'wrong','Página interativa é para pendências pequenas (até 20%). Acima disso não entrega valor.','r2')">
+        A) Enviar com página interativa nos 60%
+      </button>
+      <button class="scenario-choice" onclick="showResult(this,'correct','Correto. Acima de 50% de páginas em branco, formalizamos alteração de prazo por e-mail e avaliamos remoção do lote ou reembolso.','r2')">
+        B) Enviar e-mail formalizando alteração de prazo e avaliar separar do lote
+      </button>
+      <button class="scenario-choice" onclick="showResult(this,'wrong','Reembolso direto, sem conversa, é precipitado. Primeiro formalizar com a escola.','r2')">
+        C) Solicitar reembolso da família imediatamente
+      </button>
+      <button class="scenario-choice" onclick="showResult(this,'wrong','Imprimir 60% em branco gera refação certa e quebra a percepção de qualidade.','r2')">
+        D) Imprimir do jeito que está
+      </button>
+      <div class="scenario-result" id="r2"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🎮</span> Cenário 3 — Escola sem CNPJ confirmado, mas com endereço OK</h2>
+    <div class="scenario">
+      <div class="scenario-context">
+        <strong>Contexto:</strong> É D-1. Você confirmou endereço, CEP, responsável, horário e nomes. Falta apenas o CNPJ — a gestora não tem o documento em mãos e disse que vai te mandar amanhã. A produção precisa ser enviada hoje.
+      </div>
+      <button class="scenario-choice" onclick="showResult(this,'wrong','Travar o EG por causa do CNPJ atrasa o EA. Existem caminhos.','r3')">
+        A) Travar o EG até a gestora enviar o CNPJ
+      </button>
+      <button class="scenario-choice" onclick="showResult(this,'correct','Sim. Confirmação de dados cadastrais (incluindo CNPJ) entra no grupo "enviamos para produção mesmo assim" — validamos pela internet e seguimos.','r3')">
+        B) Buscar o CNPJ por consulta na Receita Federal e enviar
+      </button>
+      <button class="scenario-choice" onclick="showResult(this,'wrong','Inventar dado fiscal nunca. Sério, nunca.','r3')">
+        C) Colocar um CNPJ qualquer para destravar o sistema
+      </button>
+      <button class="scenario-choice" onclick="showResult(this,'wrong','Alterar prazo por causa do CNPJ é desproporcional.','r3')">
+        D) Alterar a data do EA
+      </button>
+      <div class="scenario-result" id="r3"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== QUIZ FINAL ===== -->
+<section class="module" id="m-quiz">
+  <div class="module-header">
+    <span class="module-tag">Fixação</span>
+    <h1>Quiz final</h1>
+    <p class="module-subtitle">Teste o que você aprendeu. Sem pressão — pode tentar quantas vezes quiser.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">📝</span> 8 perguntas</h2>
+    <div id="quiz"></div>
+    <div style="margin-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <button class="btn btn-primary" onclick="checkQuiz()">Conferir respostas</button>
+      <div id="quizScore" style="font-weight:700;color:var(--roxo)"></div>
+    </div>
+  </div>
+</section>
+</main>
+</div>
+
+<script>
+// ========== NAVEGAÇÃO ==========
+const navItems = document.querySelectorAll('.nav-item');
+const modules = document.querySelectorAll('.module');
+const visited = new Set();
+const TOTAL = navItems.length;
+
+// Lista ordenada [{id, label}] a partir do menu lateral
+const ORDER = Array.from(navItems).map(n=>({
+  id: n.dataset.target,
+  label: n.textContent.replace(/^\s*[\d★]+\s*/,'').trim()
+}));
+
+function goTo(id){
+  modules.forEach(m=>m.classList.remove('active'));
+  navItems.forEach(n=>n.classList.remove('active'));
+  const target = document.getElementById(id);
+  if(target) target.classList.add('active');
+  const nav = document.querySelector(`.nav-item[data-target="${id}"]`);
+  if(nav) nav.classList.add('active');
+  visited.add(id);
+  updateProgress();
+  updateFooterDots(id);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+navItems.forEach(n=>n.addEventListener('click',()=>goTo(n.dataset.target)));
+
+function updateProgress(){
+  const pct = Math.round((visited.size/TOTAL)*100);
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('progText').textContent = `${visited.size} de ${TOTAL} módulos`;
+}
+visited.add('m-intro');
+updateProgress();
+
+// ========== INJETAR FOOTER NAV EM CADA MÓDULO ==========
+modules.forEach((mod, idx)=>{
+  const prev = idx>0 ? ORDER[idx-1] : null;
+  const next = idx<ORDER.length-1 ? ORDER[idx+1] : null;
+  const footer = document.createElement('div');
+  footer.className='module-footer';
+  footer.innerHTML = `
+    ${prev ? `
+      <button class="nav-btn" onclick="goTo('${prev.id}')">
+        <div class="nav-btn-arrow">←</div>
+        <div class="nav-btn-info">
+          <div class="nav-btn-label">Anterior</div>
+          <div class="nav-btn-title">${prev.label}</div>
+        </div>
+      </button>` : `
+      <button class="nav-btn" disabled>
+        <div class="nav-btn-arrow">←</div>
+        <div class="nav-btn-info">
+          <div class="nav-btn-label">Início</div>
+          <div class="nav-btn-title">Você está no começo</div>
+        </div>
+      </button>`}
+    ${next ? `
+      <button class="nav-btn nav-btn-next" onclick="goTo('${next.id}')">
+        <div class="nav-btn-info">
+          <div class="nav-btn-label">Próximo</div>
+          <div class="nav-btn-title">${next.label}</div>
+        </div>
+        <div class="nav-btn-arrow">→</div>
+      </button>` : `
+      <button class="nav-btn nav-btn-next" disabled>
+        <div class="nav-btn-info">
+          <div class="nav-btn-label">Fim</div>
+          <div class="nav-btn-title">Treinamento concluído 🎉</div>
+        </div>
+        <div class="nav-btn-arrow">✓</div>
+      </button>`}
+  `;
+  // Pílula de progresso (pontos)
+  const pill = document.createElement('div');
+  pill.className='module-progress-pill';
+  pill.innerHTML = `<span>Módulo ${idx+1} de ${TOTAL}</span>` +
+    ORDER.map((_,i)=>`<span class="dot${i===idx?' active':(i<idx?' done':'')}"></span>`).join('');
+  mod.appendChild(footer);
+  mod.appendChild(pill);
+});
+
+function updateFooterDots(currentId){
+  const currentIdx = ORDER.findIndex(o=>o.id===currentId);
+  document.querySelectorAll('.module-progress-pill').forEach((pill, modIdx)=>{
+    // Só atualiza visual do módulo atual; outros mantêm seu próprio estado
+    if(modIdx===currentIdx){
+      const dots = pill.querySelectorAll('.dot');
+      dots.forEach((d,i)=>{
+        d.classList.remove('active','done');
+        if(i===currentIdx) d.classList.add('active');
+        else if(i<currentIdx) d.classList.add('done');
+      });
+    }
+  });
+}
+
+// Atalhos de teclado: ← →
+document.addEventListener('keydown',(e)=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  const current = document.querySelector('.module.active');
+  if(!current) return;
+  const idx = ORDER.findIndex(o=>o.id===current.id);
+  if(e.key==='ArrowRight' && idx<ORDER.length-1) goTo(ORDER[idx+1].id);
+  if(e.key==='ArrowLeft' && idx>0) goTo(ORDER[idx-1].id);
+});
+
+// ========== TABS ==========
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const card = btn.closest('.module');
+    card.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    card.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    const tc = card.querySelector('#'+btn.dataset.tab);
+    if(tc) tc.classList.add('active');
+  });
+});
+
+// ========== COPY TO CLIPBOARD ==========
+function copyText(id, btn){
+  const txt = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const original = btn.innerHTML;
+    btn.innerHTML = '✓ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.innerHTML=original;btn.classList.remove('copied')},1800);
+  }).catch(()=>{
+    // fallback
+    const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);
+    ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    btn.innerHTML='✓ Copiado!';btn.classList.add('copied');
+    setTimeout(()=>{btn.innerHTML='📋 Copiar';btn.classList.remove('copied')},1800);
+  });
+}
+
+// ========== BUSCA DE TEMPLATES ==========
+const search = document.getElementById('searchTpl');
+if(search){
+  search.addEventListener('input',e=>{
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('#tplList .template-card').forEach(card=>{
+      const data = (card.dataset.search||'') + ' ' + card.textContent.toLowerCase();
+      card.style.display = data.includes(q) ? '' : 'none';
+    });
+  });
+}
+
+// ========== SIMULADOR DE CENÁRIOS ==========
+function showResult(btn, status, msg, resultId){
+  const scenario = btn.closest('.scenario');
+  const result = resultId ? document.getElementById(resultId) : scenario.querySelector('#r1');
+  scenario.querySelectorAll('.scenario-choice').forEach(c=>{c.disabled=true;c.style.opacity=.6});
+  btn.style.opacity=1;
+  if(status==='correct'){
+    btn.style.borderColor='var(--verde)';btn.style.background='#F0FDF4';
+    result.style.background='#F0FDF4';result.style.color='#166534';
+    result.innerHTML = '<strong>✅ Boa escolha!</strong> ' + msg;
+  } else {
+    btn.style.borderColor='var(--vermelho)';btn.style.background='#FEF2F2';
+    result.style.background='#FEF2F2';result.style.color='#991B1B';
+    result.innerHTML = '<strong>❌ Não é o melhor caminho.</strong> ' + msg;
+  }
+  result.classList.add('show');
+}
+
+// ========== QUIZ ==========
+const QUIZ = [
+  {q:'Quantos dias úteis antes do EG inicia o Pré-EG?', opts:['3 dias','5 dias','7 dias','10 dias'], correct:2},
+  {q:'Quais dias da cadência têm contato obrigatório?', opts:['Todos os dias','Só D-7','D-7 e D-5','Apenas D-1'], correct:2},
+  {q:'Aluno com 15% do livro em branco. Qual a ação correta?', opts:['Cancelar produção','Enviar com página interativa','Alterar a data do EA','Reembolsar a família'], correct:1},
+  {q:'Aluno com 60% do livro em branco. Qual a ação correta?', opts:['Enviar com página interativa','Enviar como está','Formalizar alteração de prazo por e-mail','Trocar de autor'], correct:2},
+  {q:'A escola não confirmou o CNPJ mas tem todos os outros dados. O que fazer?', opts:['Travar o EG','Validar o CNPJ por consulta externa e enviar','Inventar um número','Cancelar tudo'], correct:1},
+  {q:'A partir de qual dia formalizamos pendências por e-mail?', opts:['D-7','D-5','D-4 / D-3 (sem retorno)','Só no D0'], correct:2},
+  {q:'Qual propriedade interrompe os disparos futuros da cadência?', opts:['"Escola feliz?"','"Checklist para envio gráfico confirmado?" = Sim','"EG pago?"','Nenhuma'], correct:1},
+  {q:'Sem dados cadastrais até o D0 — qual o caminho?', opts:['Enviar com endereço fictício','Enviar e-mail alterando a data do EA','Pedir endereço de outra escola','Imprimir mesmo assim'], correct:1}
+];
+const quizDiv = document.getElementById('quiz');
+if(quizDiv){
+  QUIZ.forEach((item, idx)=>{
+    const block = document.createElement('div');
+    block.className='quiz-q';
+    block.innerHTML = `<div class="quiz-q-title"><span class="quiz-q-num">${idx+1}</span>${item.q}</div>`;
+    item.opts.forEach((opt, i)=>{
+      const o = document.createElement('div');
+      o.className='quiz-opt';
+      o.dataset.idx=i;
+      o.textContent = opt;
+      o.addEventListener('click',()=>{
+        block.querySelectorAll('.quiz-opt').forEach(x=>x.classList.remove('selected'));
+        o.classList.add('selected');
+      });
+      block.appendChild(o);
+    });
+    quizDiv.appendChild(block);
+  });
+}
+function checkQuiz(){
+  let score = 0;
+  document.querySelectorAll('#quiz .quiz-q').forEach((b, idx)=>{
+    const selected = b.querySelector('.quiz-opt.selected');
+    b.querySelectorAll('.quiz-opt').forEach(o=>{o.classList.remove('correct','wrong')});
+    const correctIdx = QUIZ[idx].correct;
+    const correctOpt = b.querySelectorAll('.quiz-opt')[correctIdx];
+    correctOpt.classList.add('correct');
+    if(selected){
+      if(parseInt(selected.dataset.idx)===correctIdx) score++;
+      else selected.classList.add('wrong');
+    }
+  });
+  const total = QUIZ.length;
+  let msg = '';
+  if(score===total) msg=`🏆 Perfeito! ${score}/${total} — você manda no Pré-EG!`;
+  else if(score>=total*0.7) msg=`💪 Boa! ${score}/${total} — quase lá, revise os pontos que errou.`;
+  else msg=`📚 ${score}/${total} — vale uma revisão dos módulos antes de fechar.`;
+  document.getElementById('quizScore').textContent = msg;
+}
+</script>
+</body>
+</html>
